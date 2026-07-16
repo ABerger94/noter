@@ -37,7 +37,7 @@ export async function getNotes({
       tags: { include: { tag: true } },
       attachments: { select: { id: true, filename: true, mimeType: true } },
     },
-    orderBy: { updatedAt: "desc" },
+    orderBy: { createdAt: "asc" },
   });
 }
 
