@@ -1,0 +1,24 @@
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/db";
+
+export async function GET(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  const attachment = await prisma.attachment.findUnique({ where: { id } });
+
+  if (!attachment) {
+    return new NextResponse("Not found", { status: 404 });
+  }
+
+  return new NextResponse(new Uint8Array(attachment.data), {
+    headers: {
+      "Content-Type": attachment.mimeType,
+      "Cache-Control": "private, max-age=31536000, immutable",
+      "Content-Disposition": `inline; filename="${encodeURIComponent(
+        attachment.filename
+      )}"`,
+    },
+  });
+}
