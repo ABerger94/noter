@@ -133,7 +133,7 @@ export default async function DashboardPage({
                   ))}
                 </div>
                 <p className="mt-3 text-xs text-slate-400">
-                  Updated {new Date(note.updatedAt).toLocaleDateString()}
+                  Created {new Date(note.createdAt).toLocaleDateString()}
                 </p>
               </Link>
             </li>
