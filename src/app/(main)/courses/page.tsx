@@ -2,6 +2,8 @@ import { createCourse, deleteCourse } from "@/app/actions/courses";
 import { getCourses } from "@/lib/data";
 import DeleteCourseButton from "./delete-course-button";
 
+export const dynamic = "force-dynamic";
+
 export default async function CoursesPage() {
   const courses = await getCourses();
 

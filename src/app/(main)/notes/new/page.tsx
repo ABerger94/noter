@@ -2,6 +2,8 @@ import { createNote } from "@/app/actions/notes";
 import { getCourses } from "@/lib/data";
 import NoteForm from "../note-form";
 
+export const dynamic = "force-dynamic";
+
 export default async function NewNotePage() {
   const courses = await getCourses();
 
