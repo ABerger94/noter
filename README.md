@@ -63,13 +63,14 @@ or [Vercel Postgres](https://vercel.com/storage/postgres).
 Steps for Vercel:
 
 1. Push this repo to GitHub (already done if you're reading this from there).
-2. Create a Postgres database (e.g. on Neon) and copy its connection string.
+2. Create a Postgres database (e.g. on Neon, including via the Neon integration in
+   Vercel's Storage tab) and copy its connection string.
 3. Import the repo into Vercel and set the environment variables from `.env.example`
    (`DATABASE_URL`, `APP_PASSWORD`, `AUTH_SECRET`) in the Vercel project settings.
-4. Run `npx prisma migrate deploy` against the production database once (either
-   locally with the production `DATABASE_URL`, or as a Vercel build step) to create
-   the tables.
-5. Deploy. Log in with the `APP_PASSWORD` you set.
+4. Deploy. The build command (`prisma migrate deploy && next build`) applies any
+   pending database migrations automatically before building, so there's no manual
+   migration step — every deploy keeps the schema in sync. Log in with the
+   `APP_PASSWORD` you set.
 
 Images are stored directly in the Postgres database (as binary data), so there's no
 separate file/blob storage to configure — one database is all you need.
