@@ -64,9 +64,16 @@ Steps for Vercel:
 
 1. Push this repo to GitHub (already done if you're reading this from there).
 2. Create a Postgres database (e.g. on Neon, including via the Neon integration in
-   Vercel's Storage tab) and copy its connection string.
-3. Import the repo into Vercel and set the environment variables from `.env.example`
-   (`DATABASE_URL`, `APP_PASSWORD`, `AUTH_SECRET`) in the Vercel project settings.
+   Vercel's Storage tab).
+3. Import the repo into Vercel and set these environment variables in the Vercel
+   project settings:
+   - `DATABASE_URL` — the **pooled** connection string (Neon's default; hostname
+     contains `-pooler`). This is what the running app uses.
+   - `DIRECT_URL` — the same database's **direct/unpooled** connection string
+     (hostname without `-pooler`). Migrations need this — pooled connections don't
+     support the session lock `prisma migrate deploy` takes, and will fail the
+     build with a `P1002` timeout if used there instead.
+   - `APP_PASSWORD`, `AUTH_SECRET` — from `.env.example`.
 4. Deploy. The build command (`prisma migrate deploy && next build`) applies any
    pending database migrations automatically before building, so there's no manual
    migration step — every deploy keeps the schema in sync. Log in with the
