@@ -2,8 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   experimental: {
+    // Vercel's serverless functions hard-cap request bodies at ~4.5MB
+    // regardless of this setting, so keep it at (or below) that ceiling.
     serverActions: {
-      bodySizeLimit: "25mb",
+      bodySizeLimit: "4mb",
     },
   },
 };
