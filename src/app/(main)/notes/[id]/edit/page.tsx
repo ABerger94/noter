@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { updateNote } from "@/app/actions/notes";
-import { getCourses, getNote, getOtherNotes, getRelatedNotes } from "@/lib/data";
+import { getCourses, getNote } from "@/lib/data";
 import NoteForm from "../../note-form";
 
 export default async function EditNotePage({
@@ -9,12 +9,7 @@ export default async function EditNotePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [note, courses, otherNotes, relatedNotes] = await Promise.all([
-    getNote(id),
-    getCourses(),
-    getOtherNotes(id),
-    getRelatedNotes(id),
-  ]);
+  const [note, courses] = await Promise.all([getNote(id), getCourses()]);
 
   if (!note) notFound();
 
@@ -35,8 +30,6 @@ export default async function EditNotePage({
           tags: note.tags.map(({ tag }) => tag.name).join(", "),
         }}
         existingAttachments={note.attachments}
-        otherNotes={otherNotes}
-        relatedNoteIds={relatedNotes.map((n) => n.id)}
         submitLabel="Save changes"
       />
     </div>

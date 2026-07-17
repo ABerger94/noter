@@ -7,8 +7,8 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950">
-      <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-900/80">
+    <div className="flex min-h-screen flex-col bg-slate-200 dark:bg-slate-950">
+      <header className="sticky top-0 z-10 border-b border-slate-300 bg-white/80 backdrop-blur dark:border-slate-700 dark:bg-slate-800/80">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3">
           <Link
             href="/"

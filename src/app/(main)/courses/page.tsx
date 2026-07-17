@@ -20,7 +20,7 @@ export default async function CoursesPage() {
 
       <form
         action={createCourse}
-        className="flex flex-wrap items-end gap-3 rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900"
+        className="flex flex-wrap items-end gap-3 rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800"
       >
         <div className="flex-1">
           <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
@@ -30,7 +30,7 @@ export default async function CoursesPage() {
             name="name"
             required
             placeholder="e.g. Statistics 501"
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
           />
         </div>
         <div>
@@ -57,7 +57,7 @@ export default async function CoursesPage() {
           No courses yet. Add one above.
         </p>
       ) : (
-        <ul className="divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white dark:divide-slate-800 dark:border-slate-800 dark:bg-slate-900">
+        <ul className="divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white dark:divide-slate-700 dark:border-slate-700 dark:bg-slate-800">
           {courses.map((course) => (
             <li
               key={course.id}

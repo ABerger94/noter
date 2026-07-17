@@ -3,21 +3,16 @@
 import { useRef, useState, useTransition } from "react";
 import { compressImages } from "@/lib/compress-image";
 import ContentEditor from "./content-editor";
-import RelatedNotesPicker from "./related-notes-picker";
 
 type Course = { id: string; name: string };
 
 type ExistingAttachment = { id: string; filename: string };
-
-type NoteOption = { id: string; title: string; course: { name: string } | null };
 
 export default function NoteForm({
   action,
   courses,
   defaultValues,
   existingAttachments = [],
-  otherNotes,
-  relatedNoteIds = [],
   submitLabel,
 }: {
   action: (formData: FormData) => void;
@@ -29,8 +24,6 @@ export default function NoteForm({
     tags?: string;
   };
   existingAttachments?: ExistingAttachment[];
-  otherNotes?: NoteOption[];
-  relatedNoteIds?: string[];
   submitLabel: string;
 }) {
   const [toRemove, setToRemove] = useState<Set<string>>(new Set());
@@ -87,14 +80,14 @@ export default function NoteForm({
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
-      <div className="space-y-5 rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
+      <div className="space-y-5 rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-800">
         <div>
           <input
             name="title"
             required
             defaultValue={defaultValues?.title}
             placeholder="Note title"
-            className="w-full border-0 border-b border-slate-200 px-0 pb-2 text-xl font-semibold outline-none focus:border-indigo-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+            className="w-full border-0 border-b border-slate-200 px-0 pb-2 text-xl font-semibold outline-none focus:border-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
           />
         </div>
 
@@ -106,7 +99,7 @@ export default function NoteForm({
             <select
               name="courseId"
               defaultValue={defaultValues?.courseId ?? ""}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
             >
               <option value="">No course</option>
               {courses.map((c) => (
@@ -124,7 +117,7 @@ export default function NoteForm({
               name="tags"
               defaultValue={defaultValues?.tags}
               placeholder="exam-prep, week3"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
             />
           </div>
         </div>
@@ -134,7 +127,7 @@ export default function NoteForm({
         </div>
       </div>
 
-      <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
+      <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-800">
         <p className="text-sm font-medium text-slate-700 dark:text-slate-300">Images</p>
 
         {existingAttachments.length > 0 && (
@@ -186,20 +179,6 @@ export default function NoteForm({
           </p>
         </div>
       </div>
-
-      {otherNotes && (
-        <div className="space-y-3 rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
-          <div>
-            <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
-              Related notes
-            </p>
-            <p className="text-xs text-slate-400">
-              Link this note to other notes so you can jump between them.
-            </p>
-          </div>
-          <RelatedNotesPicker allNotes={otherNotes} initialSelectedIds={relatedNoteIds} />
-        </div>
-      )}
 
       {error && (
         <p className="text-sm text-red-600 dark:text-red-400">{error}</p>

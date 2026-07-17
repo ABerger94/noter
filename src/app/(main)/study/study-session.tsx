@@ -101,7 +101,7 @@ export default function StudySession({ cards }: { cards: Flashcard[] }) {
             setRevealed((r) => !r);
           }
         }}
-        className="w-full cursor-pointer rounded-xl border border-slate-200 bg-white p-6 text-left shadow-sm dark:border-slate-800 dark:bg-slate-900"
+        className="w-full cursor-pointer rounded-xl border border-slate-200 bg-white p-6 text-left shadow-sm dark:border-slate-700 dark:bg-slate-800"
       >
         <div className="flex flex-wrap items-center gap-2">
           <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500 dark:bg-slate-800 dark:text-slate-400">
@@ -137,7 +137,7 @@ export default function StudySession({ cards }: { cards: Flashcard[] }) {
             Click, or press space, to reveal &rarr;
           </p>
         ) : (
-          <div className="mt-4 border-t border-slate-100 pt-4 dark:border-slate-800">
+          <div className="mt-4 border-t border-slate-100 pt-4 dark:border-slate-700">
             {current.back ? (
               <div className="prose prose-slate max-w-none dark:prose-invert">
                 <MarkdownContent content={current.back} />
@@ -150,7 +150,7 @@ export default function StudySession({ cards }: { cards: Flashcard[] }) {
                 {current.attachments.map((att) => (
                   <div
                     key={att.id}
-                    className="overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800"
+                    className="overflow-hidden rounded-lg border border-slate-200 dark:border-slate-700"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img

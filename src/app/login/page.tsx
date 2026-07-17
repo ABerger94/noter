@@ -8,8 +8,8 @@ export default async function LoginPage({
   const { next } = await searchParams;
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 dark:bg-slate-950">
-      <div className="w-full max-w-sm rounded-xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <div className="flex min-h-screen items-center justify-center bg-slate-200 px-4 dark:bg-slate-950">
+      <div className="w-full max-w-sm rounded-xl border border-slate-300 bg-white p-8 shadow-lg dark:border-slate-700 dark:bg-slate-800">
         <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
           Noter
         </h1>

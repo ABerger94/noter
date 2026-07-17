@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import { computeRelatedNotes } from "@/lib/related";
 
 export async function getCourses() {
   return prisma.course.findMany({ orderBy: { name: "asc" } });
@@ -52,22 +53,16 @@ export async function getNote(id: string) {
   });
 }
 
-export async function getRelatedNotes(noteId: string) {
-  const links = await prisma.noteLink.findMany({
-    where: { OR: [{ noteAId: noteId }, { noteBId: noteId }] },
-    include: {
-      noteA: { include: { course: true } },
-      noteB: { include: { course: true } },
+export async function getRelatedNotes(noteId: string, limit = 5) {
+  const notes = await prisma.note.findMany({
+    select: {
+      id: true,
+      title: true,
+      content: true,
+      course: { select: { id: true, name: true, color: true } },
+      tags: { select: { tag: { select: { id: true, name: true } } } },
     },
   });
 
-  return links.map((link) => (link.noteAId === noteId ? link.noteB : link.noteA));
-}
-
-export async function getOtherNotes(excludeId?: string) {
-  return prisma.note.findMany({
-    where: excludeId ? { id: { not: excludeId } } : {},
-    select: { id: true, title: true, course: { select: { name: true } } },
-    orderBy: { title: "asc" },
-  });
+  return computeRelatedNotes(noteId, notes, limit);
 }

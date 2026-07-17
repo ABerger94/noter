@@ -28,28 +28,6 @@ async function connectTags(tagNames: string[]) {
   return tagRecords.map((t) => t.id);
 }
 
-function normalizePair(a: string, b: string): [string, string] {
-  return a < b ? [a, b] : [b, a];
-}
-
-async function setRelatedNotes(noteId: string, relatedIds: string[]) {
-  const uniqueIds = Array.from(new Set(relatedIds.filter((id) => id && id !== noteId)));
-
-  await prisma.noteLink.deleteMany({
-    where: { OR: [{ noteAId: noteId }, { noteBId: noteId }] },
-  });
-
-  if (uniqueIds.length === 0) return;
-
-  await prisma.noteLink.createMany({
-    data: uniqueIds.map((otherId) => {
-      const [noteAId, noteBId] = normalizePair(noteId, otherId);
-      return { noteAId, noteBId };
-    }),
-    skipDuplicates: true,
-  });
-}
-
 async function filesToAttachments(files: File[]) {
   const images = files.filter((f) => f && f.size > 0);
   return Promise.all(
@@ -102,7 +80,6 @@ export async function updateNote(noteId: string, formData: FormData) {
   const removeAttachmentIds = formData
     .getAll("removeAttachments")
     .map((v) => String(v));
-  const relatedNoteIds = formData.getAll("relatedNoteIds").map((v) => String(v));
 
   if (!title) {
     throw new Error("Title is required");
@@ -127,8 +104,6 @@ export async function updateNote(noteId: string, formData: FormData) {
       },
     }),
   ]);
-
-  await setRelatedNotes(noteId, relatedNoteIds);
 
   revalidatePath("/");
   revalidatePath(`/notes/${noteId}`);
