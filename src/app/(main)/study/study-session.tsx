@@ -2,16 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import type { Flashcard } from "@/lib/flashcards";
 import MarkdownContent from "../notes/markdown-content";
-
-type StudyNote = {
-  id: string;
-  title: string;
-  content: string;
-  course: { name: string; color: string } | null;
-  tags: { tag: { id: string; name: string } }[];
-  attachments: { id: string; filename: string }[];
-};
 
 function shuffle<T>(items: T[]): T[] {
   const arr = [...items];
@@ -22,14 +14,14 @@ function shuffle<T>(items: T[]): T[] {
   return arr;
 }
 
-export default function StudySession({ notes }: { notes: StudyNote[] }) {
+export default function StudySession({ cards }: { cards: Flashcard[] }) {
   // Start in stable (unshuffled) order so server and client render identical
   // markup; "Shuffle" (a real click, not an effect) is what randomizes it.
-  const [order, setOrder] = useState<number[]>(() => notes.map((_, i) => i));
+  const [order, setOrder] = useState<number[]>(() => cards.map((_, i) => i));
   const [position, setPosition] = useState(0);
   const [revealed, setRevealed] = useState(false);
 
-  const current = notes[order[position]];
+  const current = cards[order[position]];
 
   const goNext = useMemo(
     () => () => {
@@ -48,7 +40,7 @@ export default function StudySession({ notes }: { notes: StudyNote[] }) {
   );
 
   function reshuffle() {
-    setOrder(shuffle(notes.map((_, i) => i)));
+    setOrder(shuffle(cards.map((_, i) => i)));
     setPosition(0);
     setRevealed(false);
   }
@@ -71,7 +63,7 @@ export default function StudySession({ notes }: { notes: StudyNote[] }) {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [goNext, goPrev]);
 
-  if (notes.length === 0) {
+  if (cards.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-slate-300 p-10 text-center dark:border-slate-700">
         <p className="text-slate-600 dark:text-slate-300">
@@ -112,6 +104,9 @@ export default function StudySession({ notes }: { notes: StudyNote[] }) {
         className="w-full cursor-pointer rounded-xl border border-slate-200 bg-white p-6 text-left shadow-sm dark:border-slate-800 dark:bg-slate-900"
       >
         <div className="flex flex-wrap items-center gap-2">
+          <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+            {current.kind === "term" ? "Term" : "Section"}
+          </span>
           {current.course && (
             <span
               className="rounded-full px-2 py-0.5 text-xs font-medium text-white"
@@ -120,7 +115,7 @@ export default function StudySession({ notes }: { notes: StudyNote[] }) {
               {current.course.name}
             </span>
           )}
-          {current.tags.map(({ tag }) => (
+          {current.tags.map((tag) => (
             <span
               key={tag.id}
               className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 dark:bg-slate-800 dark:text-slate-300"
@@ -130,8 +125,9 @@ export default function StudySession({ notes }: { notes: StudyNote[] }) {
           ))}
         </div>
 
-        <h2 className="mt-3 text-xl font-semibold text-slate-900 dark:text-slate-100">
-          {current.title}
+        <p className="mt-3 text-xs text-slate-400">{current.noteTitle}</p>
+        <h2 className="mt-1 text-xl font-semibold text-slate-900 dark:text-slate-100">
+          {current.front}
         </h2>
 
         {!revealed ? (
@@ -140,9 +136,9 @@ export default function StudySession({ notes }: { notes: StudyNote[] }) {
           </p>
         ) : (
           <div className="mt-4 border-t border-slate-100 pt-4 dark:border-slate-800">
-            {current.content ? (
+            {current.back ? (
               <div className="prose prose-slate max-w-none dark:prose-invert">
-                <MarkdownContent content={current.content} />
+                <MarkdownContent content={current.back} />
               </div>
             ) : (
               <p className="text-sm text-slate-400">No written content on this note.</p>
@@ -165,7 +161,7 @@ export default function StudySession({ notes }: { notes: StudyNote[] }) {
               </div>
             )}
             <Link
-              href={`/notes/${current.id}`}
+              href={`/notes/${current.noteId}`}
               onClick={(e) => e.stopPropagation()}
               className="mt-4 inline-block text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
             >
