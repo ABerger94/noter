@@ -51,3 +51,23 @@ export async function getNote(id: string) {
     },
   });
 }
+
+export async function getRelatedNotes(noteId: string) {
+  const links = await prisma.noteLink.findMany({
+    where: { OR: [{ noteAId: noteId }, { noteBId: noteId }] },
+    include: {
+      noteA: { include: { course: true } },
+      noteB: { include: { course: true } },
+    },
+  });
+
+  return links.map((link) => (link.noteAId === noteId ? link.noteB : link.noteA));
+}
+
+export async function getOtherNotes(excludeId?: string) {
+  return prisma.note.findMany({
+    where: excludeId ? { id: { not: excludeId } } : {},
+    select: { id: true, title: true, course: { select: { name: true } } },
+    orderBy: { title: "asc" },
+  });
+}

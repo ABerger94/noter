@@ -30,6 +30,12 @@ export default function MainLayout({
               Courses
             </Link>
             <Link
+              href="/study"
+              className="text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-400"
+            >
+              Study
+            </Link>
+            <Link
               href="/notes/new"
               className="rounded-lg bg-indigo-600 px-3 py-1.5 font-medium text-white hover:bg-indigo-500"
             >
