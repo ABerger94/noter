@@ -20,7 +20,7 @@ export default function DeleteCourseButton({
     >
       <button
         type="submit"
-        className="text-sm text-red-500 hover:text-red-600 dark:text-red-400"
+        className="text-sm text-red-500 hover:text-red-600"
       >
         Remove
       </button>

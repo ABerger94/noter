@@ -21,15 +21,15 @@ export default async function NoteViewPage({
     <article className="mx-auto max-w-3xl">
       <Link
         href="/"
-        className="mb-4 inline-block text-sm text-slate-500 hover:text-indigo-600 dark:text-slate-400"
+        className="mb-4 inline-block text-sm text-slate-500 hover:text-indigo-600"
       >
         &larr; Back to all notes
       </Link>
 
-      <div className="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
-        <div className="flex items-start justify-between gap-4 border-b border-slate-100 p-5 dark:border-slate-700">
+      <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div className="flex items-start justify-between gap-4 border-b border-slate-100 p-5">
           <div className="min-w-0">
-            <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
+            <h1 className="text-2xl font-semibold text-slate-900">
               {note.title}
             </h1>
             <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -45,7 +45,7 @@ export default async function NoteViewPage({
                 <Link
                   key={tag.id}
                   href={{ pathname: "/", query: { tag: tag.name } }}
-                  className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 hover:bg-indigo-100 hover:text-indigo-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-indigo-950 dark:hover:text-indigo-300"
+                  className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 hover:bg-indigo-100 hover:text-indigo-700"
                 >
                   #{tag.name}
                 </Link>
@@ -60,7 +60,7 @@ export default async function NoteViewPage({
           <div className="flex shrink-0 gap-2">
             <Link
               href={`/notes/${note.id}/edit`}
-              className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+              className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100"
             >
               Edit
             </Link>
@@ -69,16 +69,16 @@ export default async function NoteViewPage({
         </div>
 
         {note.content && (
-          <div className="prose prose-slate max-w-none p-5 dark:prose-invert">
+          <div className="prose prose-slate max-w-none p-5">
             <MarkdownContent content={note.content} />
           </div>
         )}
 
         {note.attachments.length > 0 && (
           <div
-            className={`p-5 ${note.content ? "border-t border-slate-100 dark:border-slate-700" : ""}`}
+            className={`p-5 ${note.content ? "border-t border-slate-100" : ""}`}
           >
-            <p className="mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">
+            <p className="mb-2 text-sm font-medium text-slate-700">
               Images
             </p>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -88,7 +88,7 @@ export default async function NoteViewPage({
                   href={`/api/attachments/${att.id}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="group block overflow-hidden rounded-lg border border-slate-200 dark:border-slate-700"
+                  className="group block overflow-hidden rounded-lg border border-slate-200"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -105,11 +105,11 @@ export default async function NoteViewPage({
         <div
           className={`p-5 ${
             note.content || note.attachments.length > 0
-              ? "border-t border-slate-100 dark:border-slate-700"
+              ? "border-t border-slate-100"
               : ""
           }`}
         >
-          <p className="mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">
+          <p className="mb-2 text-sm font-medium text-slate-700">
             Related notes
           </p>
           {relatedNotes.length > 0 ? (
@@ -118,7 +118,7 @@ export default async function NoteViewPage({
                 <Link
                   key={related.id}
                   href={`/notes/${related.id}`}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 px-3 py-1 text-sm text-slate-700 hover:border-indigo-300 hover:text-indigo-600 dark:border-slate-700 dark:text-slate-200 dark:hover:border-indigo-700 dark:hover:text-indigo-400"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 px-3 py-1 text-sm text-slate-700 hover:border-indigo-300 hover:text-indigo-600"
                 >
                   {related.course && (
                     <span
