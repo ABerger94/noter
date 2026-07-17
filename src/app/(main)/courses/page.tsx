@@ -1,4 +1,4 @@
-import { createCourse, deleteCourse } from "@/app/actions/courses";
+import { createCourse, deleteCourse, moveCourse } from "@/app/actions/courses";
 import { getCourses } from "@/lib/data";
 import DeleteCourseButton from "./delete-course-button";
 
@@ -57,27 +57,54 @@ export default async function CoursesPage() {
           No courses yet. Add one above.
         </p>
       ) : (
-        <ul className="divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
-          {courses.map((course) => (
-            <li
-              key={course.id}
-              className="flex items-center justify-between gap-3 px-4 py-3"
-            >
-              <div className="flex items-center gap-2">
-                <span
-                  className="h-3 w-3 rounded-full"
-                  style={{ backgroundColor: course.color }}
-                />
-                <span className="text-sm font-medium text-slate-800">
-                  {course.name}
-                </span>
-              </div>
-              <DeleteCourseButton
-                action={deleteCourse.bind(null, course.id)}
-              />
-            </li>
-          ))}
-        </ul>
+        <div>
+          <p className="mb-2 text-xs text-slate-400">
+            Use the arrows to reorder courses to match your curriculum.
+          </p>
+          <ul className="divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
+            {courses.map((course, index) => (
+              <li
+                key={course.id}
+                className="flex items-center justify-between gap-3 px-4 py-3"
+              >
+                <div className="flex items-center gap-2">
+                  <span
+                    className="h-3 w-3 rounded-full"
+                    style={{ backgroundColor: course.color }}
+                  />
+                  <span className="text-sm font-medium text-slate-800">
+                    {course.name}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <form action={moveCourse.bind(null, course.id, "up")}>
+                    <button
+                      type="submit"
+                      disabled={index === 0}
+                      aria-label={`Move ${course.name} up`}
+                      className="rounded p-1 text-slate-500 hover:bg-slate-100 disabled:pointer-events-none disabled:opacity-30"
+                    >
+                      &uarr;
+                    </button>
+                  </form>
+                  <form action={moveCourse.bind(null, course.id, "down")}>
+                    <button
+                      type="submit"
+                      disabled={index === courses.length - 1}
+                      aria-label={`Move ${course.name} down`}
+                      className="rounded p-1 text-slate-500 hover:bg-slate-100 disabled:pointer-events-none disabled:opacity-30"
+                    >
+                      &darr;
+                    </button>
+                  </form>
+                  <DeleteCourseButton
+                    action={deleteCourse.bind(null, course.id)}
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
     </div>
   );

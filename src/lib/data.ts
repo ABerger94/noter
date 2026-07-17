@@ -2,7 +2,7 @@ import { prisma } from "@/lib/db";
 import { computeRelatedNotes } from "@/lib/related";
 
 export async function getCourses() {
-  return prisma.course.findMany({ orderBy: { name: "asc" } });
+  return prisma.course.findMany({ orderBy: [{ sortOrder: "asc" }, { name: "asc" }] });
 }
 
 export async function getTags() {
