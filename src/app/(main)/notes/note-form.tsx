@@ -3,21 +3,16 @@
 import { useRef, useState, useTransition } from "react";
 import { compressImages } from "@/lib/compress-image";
 import ContentEditor from "./content-editor";
-import RelatedNotesPicker from "./related-notes-picker";
 
 type Course = { id: string; name: string };
 
 type ExistingAttachment = { id: string; filename: string };
-
-type NoteOption = { id: string; title: string; course: { name: string } | null };
 
 export default function NoteForm({
   action,
   courses,
   defaultValues,
   existingAttachments = [],
-  otherNotes,
-  relatedNoteIds = [],
   submitLabel,
 }: {
   action: (formData: FormData) => void;
@@ -29,8 +24,6 @@ export default function NoteForm({
     tags?: string;
   };
   existingAttachments?: ExistingAttachment[];
-  otherNotes?: NoteOption[];
-  relatedNoteIds?: string[];
   submitLabel: string;
 }) {
   const [toRemove, setToRemove] = useState<Set<string>>(new Set());
@@ -186,20 +179,6 @@ export default function NoteForm({
           </p>
         </div>
       </div>
-
-      {otherNotes && (
-        <div className="space-y-3 rounded-xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
-          <div>
-            <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
-              Related notes
-            </p>
-            <p className="text-xs text-slate-400">
-              Link this note to other notes so you can jump between them.
-            </p>
-          </div>
-          <RelatedNotesPicker allNotes={otherNotes} initialSelectedIds={relatedNoteIds} />
-        </div>
-      )}
 
       {error && (
         <p className="text-sm text-red-600 dark:text-red-400">{error}</p>

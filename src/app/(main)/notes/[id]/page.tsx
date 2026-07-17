@@ -132,14 +132,9 @@ export default async function NoteViewPage({
             </div>
           ) : (
             <p className="text-sm text-slate-400">
-              No notes linked yet.{" "}
-              <Link
-                href={`/notes/${note.id}/edit`}
-                className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
-              >
-                Link this note to others
-              </Link>
-              .
+              No related notes found yet. This fills in automatically based on
+              shared tags and similar wording, once other notes overlap with
+              this one.
             </p>
           )}
         </div>

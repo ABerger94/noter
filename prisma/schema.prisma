@@ -31,26 +31,10 @@ model Note {
   course      Course?      @relation(fields: [courseId], references: [id], onDelete: SetNull)
   tags        NoteTag[]
   attachments Attachment[]
-  linksFrom   NoteLink[]   @relation("NoteLinkA")
-  linksTo     NoteLink[]   @relation("NoteLinkB")
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 
   @@index([courseId])
-}
-
-// Undirected link between two notes. To keep a pair unique regardless of
-// which note initiated the link, callers always store noteAId < noteBId.
-model NoteLink {
-  id        String   @id @default(cuid())
-  noteAId   String
-  noteBId   String
-  noteA     Note     @relation("NoteLinkA", fields: [noteAId], references: [id], onDelete: Cascade)
-  noteB     Note     @relation("NoteLinkB", fields: [noteBId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-
-  @@unique([noteAId, noteBId])
-  @@index([noteBId])
 }
 
 model NoteTag {
