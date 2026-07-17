@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { logout } from "@/app/login/actions";
+import IdleSlideshow from "./idle-slideshow";
 
 export default function MainLayout({
   children,
@@ -55,6 +56,7 @@ export default function MainLayout({
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6">
         {children}
       </main>
+      <IdleSlideshow />
     </div>
   );
 }
