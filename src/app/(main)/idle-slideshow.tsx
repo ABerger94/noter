@@ -5,7 +5,7 @@ import type { Flashcard } from "@/lib/flashcards";
 import MarkdownContent from "./notes/markdown-content";
 
 const IDLE_MS = 60_000; // show the slideshow after a minute of no activity
-const SLIDE_MS = 9_000; // then advance to a new card every 9 seconds
+const SLIDE_MS = 20_000; // then advance to a new card every 20 seconds
 
 function shuffle<T>(items: T[]): T[] {
   const arr = [...items];
