@@ -1,4 +1,5 @@
 import { getCourses, getNotes, getTags } from "@/lib/data";
+import { buildFlashcards } from "@/lib/flashcards";
 import StudySession from "./study-session";
 
 export const dynamic = "force-dynamic";
@@ -14,13 +15,15 @@ export default async function StudyPage({
     getCourses(),
     getTags(),
   ]);
+  const cards = buildFlashcards(notes);
 
   return (
     <div className="mx-auto max-w-2xl">
       <h1 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Study</h1>
       <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-        Flip through your notes like flashcards: see the title, try to recall
-        it, then reveal the content.
+        Your notes are broken into one card per section (plus any{" "}
+        <span className="font-mono text-xs">**term**: definition</span> lines
+        as their own cards). See the prompt, try to recall it, then reveal.
       </p>
 
       <form className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -57,7 +60,7 @@ export default async function StudyPage({
       </form>
 
       <div className="mt-6">
-        <StudySession key={`${course ?? ""}::${tag ?? ""}`} notes={notes} />
+        <StudySession key={`${course ?? ""}::${tag ?? ""}`} cards={cards} />
       </div>
     </div>
   );
