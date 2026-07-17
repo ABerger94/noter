@@ -11,6 +11,7 @@ model Course {
   id        String   @id @default(cuid())
   name      String
   color     String   @default("#6366f1")
+  sortOrder Int      @default(0)
   createdAt DateTime @default(now())
   notes     Note[]
 
