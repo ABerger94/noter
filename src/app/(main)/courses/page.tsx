@@ -20,28 +20,28 @@ export default async function CoursesPage() {
 
       <form
         action={createCourse}
-        className="flex flex-wrap items-end gap-3 rounded-xl border border-slate-200 bg-white p-4"
+        className="flex flex-wrap items-end gap-3 rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800"
       >
         <div className="flex-1">
-          <label className="mb-1 block text-sm font-medium text-slate-700">
+          <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
             Course name
           </label>
           <input
             name="name"
             required
             placeholder="e.g. Statistics 501"
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-slate-700">
+          <label className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
             Color
           </label>
           <input
             name="color"
             type="color"
             defaultValue="#6366f1"
-            className="h-9 w-14 rounded-lg border border-slate-300"
+            className="h-9 w-14 rounded-lg border border-slate-300 dark:border-slate-700"
           />
         </div>
         <button
@@ -61,7 +61,7 @@ export default async function CoursesPage() {
           <p className="mb-2 text-xs text-slate-400">
             Use the arrows to reorder courses to match your curriculum.
           </p>
-          <ul className="divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
+          <ul className="divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white dark:divide-slate-700 dark:border-slate-700 dark:bg-slate-800">
             {courses.map((course, index) => (
               <li
                 key={course.id}
@@ -72,7 +72,7 @@ export default async function CoursesPage() {
                     className="h-3 w-3 rounded-full"
                     style={{ backgroundColor: course.color }}
                   />
-                  <span className="text-sm font-medium text-slate-800">
+                  <span className="text-sm font-medium text-slate-800 dark:text-slate-200">
                     {course.name}
                   </span>
                 </div>
@@ -82,7 +82,7 @@ export default async function CoursesPage() {
                       type="submit"
                       disabled={index === 0}
                       aria-label={`Move ${course.name} up`}
-                      className="rounded p-1 text-slate-500 hover:bg-slate-100 disabled:pointer-events-none disabled:opacity-30"
+                      className="rounded p-1 text-slate-500 hover:bg-slate-100 disabled:pointer-events-none disabled:opacity-30 dark:text-slate-400 dark:hover:bg-slate-700"
                     >
                       &uarr;
                     </button>
@@ -92,7 +92,7 @@ export default async function CoursesPage() {
                       type="submit"
                       disabled={index === courses.length - 1}
                       aria-label={`Move ${course.name} down`}
-                      className="rounded p-1 text-slate-500 hover:bg-slate-100 disabled:pointer-events-none disabled:opacity-30"
+                      className="rounded p-1 text-slate-500 hover:bg-slate-100 disabled:pointer-events-none disabled:opacity-30 dark:text-slate-400 dark:hover:bg-slate-700"
                     >
                       &darr;
                     </button>
