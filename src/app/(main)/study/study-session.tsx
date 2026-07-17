@@ -24,6 +24,7 @@ export default function StudySession({ cards }: { cards: Flashcard[] }) {
   const [position, setPosition] = useState(0);
   const [revealed, setRevealed] = useState(false);
   const [slideshowOn, setSlideshowOn] = useState(false);
+  const [autoAdvanceKey, setAutoAdvanceKey] = useState(0);
 
   const current = cards[order[position]];
 
@@ -73,7 +74,9 @@ export default function StudySession({ cards }: { cards: Flashcard[] }) {
       setPosition((p) => (p + 1) % order.length);
     }, SLIDESHOW_MS);
     return () => clearInterval(interval);
-  }, [slideshowOn, order.length]);
+    // autoAdvanceKey deliberately restarts this timer when the user manually
+    // navigates, so they get a full interval to read the newly-shown card.
+  }, [slideshowOn, order.length, autoAdvanceKey]);
 
   useEffect(() => {
     if (!slideshowOn) return;
@@ -83,6 +86,22 @@ export default function StudySession({ cards }: { cards: Flashcard[] }) {
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [slideshowOn]);
+
+  function slideshowGoNext() {
+    setPosition((p) => (p + 1) % order.length);
+    setAutoAdvanceKey((k) => k + 1);
+  }
+
+  function slideshowGoPrev() {
+    setPosition((p) => (p - 1 + order.length) % order.length);
+    setAutoAdvanceKey((k) => k + 1);
+  }
+
+  function handleSlideshowClick(e: React.MouseEvent<HTMLDivElement>) {
+    const isRightHalf = e.clientX > window.innerWidth / 2;
+    if (isRightHalf) slideshowGoNext();
+    else slideshowGoPrev();
+  }
 
   if (cards.length === 0) {
     return (
@@ -122,17 +141,27 @@ export default function StudySession({ cards }: { cards: Flashcard[] }) {
       </div>
 
       {slideshowOn && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950">
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={handleSlideshowClick}
+          className="fixed inset-0 z-50 cursor-pointer overflow-y-auto bg-slate-950"
+        >
           <div className="flex min-h-full flex-col items-center justify-center p-8">
             <button
               type="button"
-              onClick={() => setSlideshowOn(false)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setSlideshowOn(false);
+              }}
               className="fixed right-4 top-4 z-10 rounded-full bg-slate-800 px-3 py-1.5 text-sm text-slate-300 hover:bg-slate-700"
             >
               Exit slideshow
             </button>
             <SlideshowCard card={current} />
-            <p className="mt-6 text-xs text-slate-600">Press Esc or click Exit to stop</p>
+            <p className="mt-6 text-xs text-slate-600">
+              Click left/right to go back/forward &middot; Press Esc or click Exit to stop
+            </p>
           </div>
         </div>
       )}

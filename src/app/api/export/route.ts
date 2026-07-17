@@ -2,6 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { renderNotesPdf } from "@/lib/notes-pdf";
 
+export const runtime = "nodejs";
+// PDF layout (markdown parsing + Yoga/WASM layout) can take a few seconds
+// on a cold serverless instance, especially for several notes at once -
+// give it more headroom than the platform default so it doesn't get cut
+// off mid-render.
+export const maxDuration = 60;
+
 export async function GET(request: NextRequest) {
   const idsParam = request.nextUrl.searchParams.get("ids") ?? "";
   const ids = idsParam
@@ -27,12 +34,17 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "No matching notes found" }, { status: 404 });
   }
 
-  const pdf = await renderNotesPdf(ordered);
+  try {
+    const pdf = await renderNotesPdf(ordered);
 
-  return new NextResponse(new Uint8Array(pdf), {
-    headers: {
-      "Content-Type": "application/pdf",
-      "Content-Disposition": `attachment; filename="notes-export.pdf"`,
-    },
-  });
+    return new NextResponse(new Uint8Array(pdf), {
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename="notes-export.pdf"`,
+      },
+    });
+  } catch (err) {
+    console.error("PDF export failed", err);
+    return NextResponse.json({ error: "Failed to generate PDF" }, { status: 500 });
+  }
 }
