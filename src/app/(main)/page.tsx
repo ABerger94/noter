@@ -32,12 +32,12 @@ export default async function DashboardPage({
           name="q"
           defaultValue={q ?? ""}
           placeholder="Search notes by title or content..."
-          className="w-full flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+          className="w-full flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
         />
         <select
           name="course"
           defaultValue={course ?? ""}
-          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
         >
           <option value="">All courses</option>
           {courses.map((c) => (
@@ -49,7 +49,7 @@ export default async function DashboardPage({
         <select
           name="tag"
           defaultValue={tag ?? ""}
-          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
         >
           <option value="">All tags</option>
           {tags.map((t) => (
@@ -94,14 +94,14 @@ export default async function DashboardPage({
         <ul className="grid gap-4 sm:grid-cols-2">
           {notes.map((note) => (
             <li key={note.id}>
-              <div className="relative h-full rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-indigo-300 hover:shadow-md dark:border-slate-700 dark:bg-slate-800">
+              <div className="relative h-full rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-indigo-300 hover:shadow-md">
                 <Link
                   href={`/notes/${note.id}`}
                   className="absolute inset-0 z-0 rounded-xl"
                   aria-label={note.title}
                 />
                 <div className="pointer-events-none relative z-0 flex items-start justify-between gap-2">
-                  <h2 className="font-medium text-slate-900 dark:text-slate-100">
+                  <h2 className="font-medium text-slate-900">
                     {note.title}
                   </h2>
                   {note.attachments.length > 0 && (
@@ -112,7 +112,7 @@ export default async function DashboardPage({
                   )}
                 </div>
                 {note.content && (
-                  <p className="pointer-events-none relative z-0 mt-1 line-clamp-3 text-sm text-slate-500 dark:text-slate-400">
+                  <p className="pointer-events-none relative z-0 mt-1 line-clamp-3 text-sm text-slate-500">
                     {excerpt(note.content)}
                   </p>
                 )}
@@ -129,7 +129,7 @@ export default async function DashboardPage({
                     <Link
                       key={tag.id}
                       href={{ pathname: "/", query: { tag: tag.name } }}
-                      className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 hover:bg-indigo-100 hover:text-indigo-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-indigo-950 dark:hover:text-indigo-300"
+                      className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 hover:bg-indigo-100 hover:text-indigo-700"
                     >
                       #{tag.name}
                     </Link>

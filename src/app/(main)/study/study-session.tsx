@@ -101,10 +101,10 @@ export default function StudySession({ cards }: { cards: Flashcard[] }) {
             setRevealed((r) => !r);
           }
         }}
-        className="w-full cursor-pointer rounded-xl border border-slate-200 bg-white p-6 text-left shadow-sm dark:border-slate-700 dark:bg-slate-800"
+        className="w-full cursor-pointer rounded-xl border border-slate-200 bg-white p-6 text-left shadow-sm"
       >
         <div className="flex flex-wrap items-center gap-2">
-          <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+          <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500">
             {current.kind === "term" ? "Term" : "Section"}
           </span>
           {current.course && (
@@ -120,7 +120,7 @@ export default function StudySession({ cards }: { cards: Flashcard[] }) {
               key={tag.id}
               href={{ pathname: "/", query: { tag: tag.name } }}
               onClick={(e) => e.stopPropagation()}
-              className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 hover:bg-indigo-100 hover:text-indigo-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-indigo-950 dark:hover:text-indigo-300"
+              className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 hover:bg-indigo-100 hover:text-indigo-700"
             >
               #{tag.name}
             </Link>
@@ -128,7 +128,7 @@ export default function StudySession({ cards }: { cards: Flashcard[] }) {
         </div>
 
         <p className="mt-3 text-xs text-slate-400">{current.noteTitle}</p>
-        <h2 className="mt-1 text-xl font-semibold text-slate-900 dark:text-slate-100">
+        <h2 className="mt-1 text-xl font-semibold text-slate-900">
           {current.front}
         </h2>
 
@@ -137,9 +137,9 @@ export default function StudySession({ cards }: { cards: Flashcard[] }) {
             Click, or press space, to reveal &rarr;
           </p>
         ) : (
-          <div className="mt-4 border-t border-slate-100 pt-4 dark:border-slate-700">
+          <div className="mt-4 border-t border-slate-100 pt-4">
             {current.back ? (
-              <div className="prose prose-slate max-w-none dark:prose-invert">
+              <div className="prose prose-slate max-w-none">
                 <MarkdownContent content={current.back} />
               </div>
             ) : (
@@ -150,7 +150,7 @@ export default function StudySession({ cards }: { cards: Flashcard[] }) {
                 {current.attachments.map((att) => (
                   <div
                     key={att.id}
-                    className="overflow-hidden rounded-lg border border-slate-200 dark:border-slate-700"
+                    className="overflow-hidden rounded-lg border border-slate-200"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
@@ -165,7 +165,7 @@ export default function StudySession({ cards }: { cards: Flashcard[] }) {
             <Link
               href={`/notes/${current.noteId}`}
               onClick={(e) => e.stopPropagation()}
-              className="mt-4 inline-block text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
+              className="mt-4 inline-block text-sm text-indigo-600 hover:text-indigo-500"
             >
               Open full note &rarr;
             </Link>
@@ -178,7 +178,7 @@ export default function StudySession({ cards }: { cards: Flashcard[] }) {
           type="button"
           onClick={goPrev}
           disabled={isFirst}
-          className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 disabled:pointer-events-none disabled:opacity-40 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+          className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 disabled:pointer-events-none disabled:opacity-40 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800"
         >
           &larr; Previous
         </button>
@@ -193,7 +193,7 @@ export default function StudySession({ cards }: { cards: Flashcard[] }) {
           type="button"
           onClick={goNext}
           disabled={isLast}
-          className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 disabled:pointer-events-none disabled:opacity-40 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+          className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 disabled:pointer-events-none disabled:opacity-40 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800"
         >
           Next &rarr;
         </button>

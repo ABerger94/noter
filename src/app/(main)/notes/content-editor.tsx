@@ -130,7 +130,7 @@ export default function ContentEditor({
 
   return (
     <div>
-      <div className="flex flex-wrap items-center justify-between gap-2 rounded-t-lg border border-b-0 border-slate-300 bg-slate-50 px-2 py-1.5 dark:border-slate-700 dark:bg-slate-800">
+      <div className="flex flex-wrap items-center justify-between gap-2 rounded-t-lg border border-b-0 border-slate-300 bg-slate-50 px-2 py-1.5">
         <div className="flex flex-wrap gap-1">
           {TOOLBAR_BUTTONS.map((btn) => (
             <button
@@ -140,7 +140,7 @@ export default function ContentEditor({
               tabIndex={tab === "write" ? 0 : -1}
               disabled={tab !== "write"}
               onClick={() => runAction(btn.apply)}
-              className="rounded px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200 disabled:pointer-events-none disabled:opacity-40 dark:text-slate-300 dark:hover:bg-slate-700"
+              className="rounded px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-200 disabled:pointer-events-none disabled:opacity-40"
             >
               {btn.label}
             </button>
@@ -152,8 +152,8 @@ export default function ContentEditor({
             onClick={() => setTab("write")}
             className={`rounded px-2 py-1 ${
               tab === "write"
-                ? "bg-white text-slate-900 shadow-sm dark:bg-slate-800 dark:text-slate-100"
-                : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
+                ? "bg-white text-slate-900 shadow-sm"
+                : "text-slate-500 hover:text-slate-800"
             }`}
           >
             Write
@@ -163,8 +163,8 @@ export default function ContentEditor({
             onClick={() => setTab("preview")}
             className={`rounded px-2 py-1 ${
               tab === "preview"
-                ? "bg-white text-slate-900 shadow-sm dark:bg-slate-800 dark:text-slate-100"
-                : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
+                ? "bg-white text-slate-900 shadow-sm"
+                : "text-slate-500 hover:text-slate-800"
             }`}
           >
             Preview
@@ -179,15 +179,15 @@ export default function ContentEditor({
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder={"Write your notes here...\n\nUse the toolbar above, or type Markdown directly."}
-        className={`w-full rounded-b-lg border border-slate-300 px-3 py-2 font-mono text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 ${
+        className={`w-full rounded-b-lg border border-slate-300 px-3 py-2 font-mono text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 ${
           tab === "write" ? "block" : "hidden"
         }`}
       />
 
       {tab === "preview" && (
-        <div className="min-h-[24rem] rounded-b-lg border border-slate-300 px-4 py-3 dark:border-slate-700">
+        <div className="min-h-[24rem] rounded-b-lg border border-slate-300 px-4 py-3">
           {content.trim() ? (
-            <div className="prose prose-slate max-w-none dark:prose-invert">
+            <div className="prose prose-slate max-w-none">
               <MarkdownContent content={content} />
             </div>
           ) : (

@@ -13,12 +13,12 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* Note/card content stays light-themed always (see (main)/layout.tsx for
+   the page chrome, which is the only part that responds to dark mode),
+   so --foreground/--background must not flip with prefers-color-scheme -
+   otherwise elements without an explicit text/background utility (native
+   selects, borderless inputs, etc.) would inherit a dark-mode color here
+   even though their container renders as a light card. */
 
 body {
   background: var(--background);
