@@ -102,17 +102,17 @@ export default async function NoteViewPage({
           </div>
         )}
 
-        {relatedNotes.length > 0 && (
-          <div
-            className={`p-5 ${
-              note.content || note.attachments.length > 0
-                ? "border-t border-slate-100 dark:border-slate-800"
-                : ""
-            }`}
-          >
-            <p className="mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">
-              Related notes
-            </p>
+        <div
+          className={`p-5 ${
+            note.content || note.attachments.length > 0
+              ? "border-t border-slate-100 dark:border-slate-800"
+              : ""
+          }`}
+        >
+          <p className="mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">
+            Related notes
+          </p>
+          {relatedNotes.length > 0 ? (
             <div className="flex flex-wrap gap-2">
               {relatedNotes.map((related) => (
                 <Link
@@ -130,8 +130,19 @@ export default async function NoteViewPage({
                 </Link>
               ))}
             </div>
-          </div>
-        )}
+          ) : (
+            <p className="text-sm text-slate-400">
+              No notes linked yet.{" "}
+              <Link
+                href={`/notes/${note.id}/edit`}
+                className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
+              >
+                Link this note to others
+              </Link>
+              .
+            </p>
+          )}
+        </div>
       </div>
     </article>
   );
