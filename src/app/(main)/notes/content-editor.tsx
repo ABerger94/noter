@@ -152,7 +152,7 @@ export default function ContentEditor({
             onClick={() => setTab("write")}
             className={`rounded px-2 py-1 ${
               tab === "write"
-                ? "bg-white text-slate-900 shadow-sm dark:bg-slate-900 dark:text-slate-100"
+                ? "bg-white text-slate-900 shadow-sm dark:bg-slate-800 dark:text-slate-100"
                 : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
             }`}
           >
@@ -163,7 +163,7 @@ export default function ContentEditor({
             onClick={() => setTab("preview")}
             className={`rounded px-2 py-1 ${
               tab === "preview"
-                ? "bg-white text-slate-900 shadow-sm dark:bg-slate-900 dark:text-slate-100"
+                ? "bg-white text-slate-900 shadow-sm dark:bg-slate-800 dark:text-slate-100"
                 : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
             }`}
           >
@@ -179,7 +179,7 @@ export default function ContentEditor({
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder={"Write your notes here...\n\nUse the toolbar above, or type Markdown directly."}
-        className={`w-full rounded-b-lg border border-slate-300 px-3 py-2 font-mono text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 ${
+        className={`w-full rounded-b-lg border border-slate-300 px-3 py-2 font-mono text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 ${
           tab === "write" ? "block" : "hidden"
         }`}
       />

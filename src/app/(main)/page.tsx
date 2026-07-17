@@ -32,12 +32,12 @@ export default async function DashboardPage({
           name="q"
           defaultValue={q ?? ""}
           placeholder="Search notes by title or content..."
-          className="w-full flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+          className="w-full flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
         />
         <select
           name="course"
           defaultValue={course ?? ""}
-          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
         >
           <option value="">All courses</option>
           {courses.map((c) => (
@@ -49,7 +49,7 @@ export default async function DashboardPage({
         <select
           name="tag"
           defaultValue={tag ?? ""}
-          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
         >
           <option value="">All tags</option>
           {tags.map((t) => (
@@ -94,7 +94,7 @@ export default async function DashboardPage({
         <ul className="grid gap-4 sm:grid-cols-2">
           {notes.map((note) => (
             <li key={note.id}>
-              <div className="relative h-full rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-indigo-300 hover:shadow-md dark:border-slate-800 dark:bg-slate-900">
+              <div className="relative h-full rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-indigo-300 hover:shadow-md dark:border-slate-700 dark:bg-slate-800">
                 <Link
                   href={`/notes/${note.id}`}
                   className="absolute inset-0 z-0 rounded-xl"

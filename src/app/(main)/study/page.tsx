@@ -30,7 +30,7 @@ export default async function StudyPage({
         <select
           name="course"
           defaultValue={course ?? ""}
-          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
         >
           <option value="">All courses</option>
           {courses.map((c) => (
@@ -42,7 +42,7 @@ export default async function StudyPage({
         <select
           name="tag"
           defaultValue={tag ?? ""}
-          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
         >
           <option value="">All tags</option>
           {tags.map((t) => (

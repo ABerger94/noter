@@ -26,8 +26,8 @@ export default async function NoteViewPage({
         &larr; Back to all notes
       </Link>
 
-      <div className="rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-        <div className="flex items-start justify-between gap-4 border-b border-slate-100 p-5 dark:border-slate-800">
+      <div className="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
+        <div className="flex items-start justify-between gap-4 border-b border-slate-100 p-5 dark:border-slate-700">
           <div className="min-w-0">
             <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">
               {note.title}
@@ -76,7 +76,7 @@ export default async function NoteViewPage({
 
         {note.attachments.length > 0 && (
           <div
-            className={`p-5 ${note.content ? "border-t border-slate-100 dark:border-slate-800" : ""}`}
+            className={`p-5 ${note.content ? "border-t border-slate-100 dark:border-slate-700" : ""}`}
           >
             <p className="mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">
               Images
@@ -88,7 +88,7 @@ export default async function NoteViewPage({
                   href={`/api/attachments/${att.id}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="group block overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800"
+                  className="group block overflow-hidden rounded-lg border border-slate-200 dark:border-slate-700"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -105,7 +105,7 @@ export default async function NoteViewPage({
         <div
           className={`p-5 ${
             note.content || note.attachments.length > 0
-              ? "border-t border-slate-100 dark:border-slate-800"
+              ? "border-t border-slate-100 dark:border-slate-700"
               : ""
           }`}
         >
