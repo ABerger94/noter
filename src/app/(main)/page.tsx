@@ -94,11 +94,13 @@ export default async function DashboardPage({
         <ul className="grid gap-4 sm:grid-cols-2">
           {notes.map((note) => (
             <li key={note.id}>
-              <Link
-                href={`/notes/${note.id}`}
-                className="block h-full rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-indigo-300 hover:shadow-md dark:border-slate-800 dark:bg-slate-900"
-              >
-                <div className="flex items-start justify-between gap-2">
+              <div className="relative h-full rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-indigo-300 hover:shadow-md dark:border-slate-800 dark:bg-slate-900">
+                <Link
+                  href={`/notes/${note.id}`}
+                  className="absolute inset-0 z-0 rounded-xl"
+                  aria-label={note.title}
+                />
+                <div className="pointer-events-none relative z-0 flex items-start justify-between gap-2">
                   <h2 className="font-medium text-slate-900 dark:text-slate-100">
                     {note.title}
                   </h2>
@@ -110,32 +112,33 @@ export default async function DashboardPage({
                   )}
                 </div>
                 {note.content && (
-                  <p className="mt-1 line-clamp-3 text-sm text-slate-500 dark:text-slate-400">
+                  <p className="pointer-events-none relative z-0 mt-1 line-clamp-3 text-sm text-slate-500 dark:text-slate-400">
                     {excerpt(note.content)}
                   </p>
                 )}
-                <div className="mt-3 flex flex-wrap items-center gap-2">
+                <div className="relative z-10 mt-3 flex flex-wrap items-center gap-2">
                   {note.course && (
                     <span
-                      className="rounded-full px-2 py-0.5 text-xs font-medium text-white"
+                      className="pointer-events-none rounded-full px-2 py-0.5 text-xs font-medium text-white"
                       style={{ backgroundColor: note.course.color }}
                     >
                       {note.course.name}
                     </span>
                   )}
                   {note.tags.map(({ tag }) => (
-                    <span
+                    <Link
                       key={tag.id}
-                      className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+                      href={{ pathname: "/", query: { tag: tag.name } }}
+                      className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 hover:bg-indigo-100 hover:text-indigo-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-indigo-950 dark:hover:text-indigo-300"
                     >
                       #{tag.name}
-                    </span>
+                    </Link>
                   ))}
                 </div>
-                <p className="mt-3 text-xs text-slate-400">
+                <p className="pointer-events-none relative z-0 mt-3 text-xs text-slate-400">
                   Created {new Date(note.createdAt).toLocaleDateString()}
                 </p>
-              </Link>
+              </div>
             </li>
           ))}
         </ul>

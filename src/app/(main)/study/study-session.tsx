@@ -116,12 +116,14 @@ export default function StudySession({ cards }: { cards: Flashcard[] }) {
             </span>
           )}
           {current.tags.map((tag) => (
-            <span
+            <Link
               key={tag.id}
-              className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+              href={{ pathname: "/", query: { tag: tag.name } }}
+              onClick={(e) => e.stopPropagation()}
+              className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600 hover:bg-indigo-100 hover:text-indigo-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-indigo-950 dark:hover:text-indigo-300"
             >
               #{tag.name}
-            </span>
+            </Link>
           ))}
         </div>
 
