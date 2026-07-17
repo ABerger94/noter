@@ -1,5 +1,6 @@
 import { createCourse, deleteCourse, moveCourse } from "@/app/actions/courses";
 import { getCourses } from "@/lib/data";
+import CourseColorPicker from "./course-color-picker";
 import DeleteCourseButton from "./delete-course-button";
 
 export const dynamic = "force-dynamic";
@@ -59,7 +60,8 @@ export default async function CoursesPage() {
       ) : (
         <div>
           <p className="mb-2 text-xs text-slate-400">
-            Use the arrows to reorder courses to match your curriculum.
+            Use the arrows to reorder courses to match your curriculum, or
+            click the color dot to change a course&apos;s color.
           </p>
           <ul className="divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white dark:divide-slate-700 dark:border-slate-700 dark:bg-slate-800">
             {courses.map((course, index) => (
@@ -68,10 +70,7 @@ export default async function CoursesPage() {
                 className="flex items-center justify-between gap-3 px-4 py-3"
               >
                 <div className="flex items-center gap-2">
-                  <span
-                    className="h-3 w-3 rounded-full"
-                    style={{ backgroundColor: course.color }}
-                  />
+                  <CourseColorPicker courseId={course.id} initialColor={course.color} />
                   <span className="text-sm font-medium text-slate-800 dark:text-slate-200">
                     {course.name}
                   </span>
