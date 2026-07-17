@@ -29,6 +29,15 @@ export async function deleteCourse(courseId: string) {
   revalidatePath("/");
 }
 
+export async function updateCourseColor(courseId: string, color: string) {
+  if (!/^#[0-9a-fA-F]{6}$/.test(color)) return;
+
+  await prisma.course.update({ where: { id: courseId }, data: { color } });
+  revalidatePath("/courses");
+  revalidatePath("/notes/new");
+  revalidatePath("/");
+}
+
 export async function moveCourse(courseId: string, direction: "up" | "down") {
   const courses = await prisma.course.findMany({
     orderBy: [{ sortOrder: "asc" }, { name: "asc" }],

@@ -14,7 +14,7 @@ export default function MainLayout({
             href="/"
             className="text-lg font-semibold tracking-tight text-slate-900 dark:text-slate-100"
           >
-            Noter
+            Note<span className="text-indigo-600 dark:text-indigo-400">r</span>
           </Link>
           <nav className="flex items-center gap-4 text-sm">
             <Link
