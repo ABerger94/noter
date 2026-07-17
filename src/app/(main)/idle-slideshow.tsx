@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Flashcard } from "@/lib/flashcards";
-import MarkdownContent from "./notes/markdown-content";
+import SlideshowCard from "./slideshow-card";
 
 const IDLE_MS = 60_000; // show the slideshow after a minute of no activity
 const SLIDE_MS = 20_000; // then advance to a new card every 20 seconds
@@ -25,6 +25,11 @@ export default function IdleSlideshow() {
   const [cards, setCards] = useState<Flashcard[] | null>(null);
   const [index, setIndex] = useState(0);
   const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const idleRef = useRef(false);
+
+  useEffect(() => {
+    idleRef.current = idle;
+  }, [idle]);
 
   const armTimer = useCallback(() => {
     if (idleTimer.current) clearTimeout(idleTimer.current);
@@ -36,22 +41,31 @@ export default function IdleSlideshow() {
     armTimer();
   }, [armTimer]);
 
+  // Scrolling/wheeling should count as activity that resets the idle timer,
+  // but shouldn't dismiss the overlay once it's already showing - otherwise
+  // scrolling to read a tall card immediately closes it.
+  const trackScrollActivity = useCallback(() => {
+    if (idleRef.current) return;
+    armTimer();
+  }, [armTimer]);
+
   useEffect(() => {
-    const events: (keyof WindowEventMap)[] = [
+    const dismissEvents: (keyof WindowEventMap)[] = [
       "mousemove",
       "mousedown",
       "keydown",
       "touchstart",
-      "scroll",
-      "wheel",
     ];
-    events.forEach((e) => window.addEventListener(e, wake));
+    const scrollEvents: (keyof WindowEventMap)[] = ["scroll", "wheel"];
+    dismissEvents.forEach((e) => window.addEventListener(e, wake));
+    scrollEvents.forEach((e) => window.addEventListener(e, trackScrollActivity));
     armTimer();
     return () => {
-      events.forEach((e) => window.removeEventListener(e, wake));
+      dismissEvents.forEach((e) => window.removeEventListener(e, wake));
+      scrollEvents.forEach((e) => window.removeEventListener(e, trackScrollActivity));
       if (idleTimer.current) clearTimeout(idleTimer.current);
     };
-  }, [wake, armTimer]);
+  }, [wake, trackScrollActivity, armTimer]);
 
   useEffect(() => {
     if (!idle) return;
@@ -93,47 +107,16 @@ export default function IdleSlideshow() {
       tabIndex={0}
       onClick={wake}
       onKeyDown={wake}
-      className="fixed inset-0 z-50 flex cursor-pointer flex-col items-center justify-center bg-slate-950 p-8"
+      className="fixed inset-0 z-50 cursor-pointer overflow-y-auto bg-slate-950"
     >
-      {!card ? (
-        <p className="text-sm text-slate-500">Loading...</p>
-      ) : (
-        <div className="w-full max-w-2xl rounded-2xl border border-slate-800 bg-slate-900 p-8 text-left shadow-2xl sm:p-10">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-slate-800 px-2 py-0.5 text-xs font-medium text-slate-400">
-              {card.kind === "term" ? "Term" : "Section"}
-            </span>
-            {card.course && (
-              <span
-                className="rounded-full px-2 py-0.5 text-xs font-medium text-white"
-                style={{ backgroundColor: card.course.color }}
-              >
-                {card.course.name}
-              </span>
-            )}
-            {card.tags.map((tag) => (
-              <span
-                key={tag.id}
-                className="rounded-full bg-slate-800 px-2 py-0.5 text-xs text-slate-300"
-              >
-                #{tag.name}
-              </span>
-            ))}
-          </div>
-
-          <p className="mt-4 text-xs text-slate-500">{card.noteTitle}</p>
-          <h2 data-testid="idle-card-front" className="mt-1 text-2xl font-semibold text-slate-100">
-            {card.front}
-          </h2>
-
-          {card.back && (
-            <div className="prose prose-invert prose-slate mt-4 max-w-none border-t border-slate-800 pt-4">
-              <MarkdownContent content={card.back} />
-            </div>
-          )}
-        </div>
-      )}
-      <p className="mt-6 text-xs text-slate-600">Move, click, or press any key to continue</p>
+      <div className="flex min-h-full flex-col items-center justify-center p-8">
+        {!card ? (
+          <p className="text-sm text-slate-500">Loading...</p>
+        ) : (
+          <SlideshowCard card={card} />
+        )}
+        <p className="mt-6 text-xs text-slate-600">Move, click, or press any key to continue</p>
+      </div>
     </div>
   );
 }

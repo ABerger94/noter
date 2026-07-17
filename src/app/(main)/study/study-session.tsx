@@ -4,6 +4,9 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import type { Flashcard } from "@/lib/flashcards";
 import MarkdownContent from "../notes/markdown-content";
+import SlideshowCard from "../slideshow-card";
+
+const SLIDESHOW_MS = 30_000; // auto-advance every 30 seconds in slideshow mode
 
 function shuffle<T>(items: T[]): T[] {
   const arr = [...items];
@@ -20,6 +23,7 @@ export default function StudySession({ cards }: { cards: Flashcard[] }) {
   const [order, setOrder] = useState<number[]>(() => cards.map((_, i) => i));
   const [position, setPosition] = useState(0);
   const [revealed, setRevealed] = useState(false);
+  const [slideshowOn, setSlideshowOn] = useState(false);
 
   const current = cards[order[position]];
 
@@ -63,6 +67,23 @@ export default function StudySession({ cards }: { cards: Flashcard[] }) {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [goNext, goPrev]);
 
+  useEffect(() => {
+    if (!slideshowOn || order.length < 2) return;
+    const interval = setInterval(() => {
+      setPosition((p) => (p + 1) % order.length);
+    }, SLIDESHOW_MS);
+    return () => clearInterval(interval);
+  }, [slideshowOn, order.length]);
+
+  useEffect(() => {
+    if (!slideshowOn) return;
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setSlideshowOn(false);
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [slideshowOn]);
+
   if (cards.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-slate-300 p-10 text-center dark:border-slate-700">
@@ -82,14 +103,39 @@ export default function StudySession({ cards }: { cards: Flashcard[] }) {
         <span>
           Card {position + 1} of {order.length}
         </span>
-        <button
-          type="button"
-          onClick={reshuffle}
-          className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
-        >
-          Shuffle
-        </button>
+        <div className="flex items-center gap-4">
+          <button
+            type="button"
+            onClick={() => setSlideshowOn(true)}
+            className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
+          >
+            Slideshow mode
+          </button>
+          <button
+            type="button"
+            onClick={reshuffle}
+            className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
+          >
+            Shuffle
+          </button>
+        </div>
       </div>
+
+      {slideshowOn && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950">
+          <div className="flex min-h-full flex-col items-center justify-center p-8">
+            <button
+              type="button"
+              onClick={() => setSlideshowOn(false)}
+              className="fixed right-4 top-4 z-10 rounded-full bg-slate-800 px-3 py-1.5 text-sm text-slate-300 hover:bg-slate-700"
+            >
+              Exit slideshow
+            </button>
+            <SlideshowCard card={current} />
+            <p className="mt-6 text-xs text-slate-600">Press Esc or click Exit to stop</p>
+          </div>
+        </div>
+      )}
 
       <div
         role="button"
