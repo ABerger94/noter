@@ -1,11 +1,13 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Flashcard } from "@/lib/flashcards";
 import MarkdownContent from "./notes/markdown-content";
 
 const IDLE_MS = 60_000; // show the slideshow after a minute of no activity
-const SLIDE_MS = 9_000; // then advance to a new card every 9 seconds
+const SLIDE_MS = 20_000; // then advance to a new card every 20 seconds
+const STUDY_SLIDE_MS = 30_000; // on the study page, give each slide 30 seconds
 
 function shuffle<T>(items: T[]): T[] {
   const arr = [...items];
@@ -17,6 +19,8 @@ function shuffle<T>(items: T[]): T[] {
 }
 
 export default function IdleSlideshow() {
+  const pathname = usePathname();
+  const slideMs = pathname?.startsWith("/study") ? STUDY_SLIDE_MS : SLIDE_MS;
   const [idle, setIdle] = useState(false);
   const [cards, setCards] = useState<Flashcard[] | null>(null);
   const [index, setIndex] = useState(0);
@@ -75,9 +79,9 @@ export default function IdleSlideshow() {
     if (!idle || !cards || cards.length < 2) return;
     const interval = setInterval(() => {
       setIndex((i) => (i + 1) % cards.length);
-    }, SLIDE_MS);
+    }, slideMs);
     return () => clearInterval(interval);
-  }, [idle, cards]);
+  }, [idle, cards, slideMs]);
 
   if (!idle || (cards && cards.length === 0)) return null;
 
