@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { htmlToMarkdown } from "@/lib/html-to-markdown";
 import MarkdownContent from "./markdown-content";
 
 type Selection = { start: number; end: number };
@@ -128,6 +129,23 @@ export default function ContentEditor({
     setContent(result.value);
   }
 
+  function handlePaste(e: React.ClipboardEvent<HTMLTextAreaElement>) {
+    const html = e.clipboardData.getData("text/html");
+    if (!html) return; // no rich content on the clipboard; let plain-text paste happen normally
+
+    e.preventDefault();
+    const markdown = htmlToMarkdown(html);
+    if (!markdown) return;
+
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+    const { selectionStart, selectionEnd, value } = textarea;
+    const newValue = value.slice(0, selectionStart) + markdown + value.slice(selectionEnd);
+    const cursor = selectionStart + markdown.length;
+    pendingSelection.current = { start: cursor, end: cursor };
+    setContent(newValue);
+  }
+
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-2 rounded-t-lg border border-b-0 border-slate-300 bg-slate-50 px-2 py-1.5">
@@ -178,6 +196,7 @@ export default function ContentEditor({
         rows={16}
         value={content}
         onChange={(e) => setContent(e.target.value)}
+        onPaste={handlePaste}
         placeholder={"Write your notes here...\n\nUse the toolbar above, or type Markdown directly."}
         className={`w-full rounded-b-lg border border-slate-300 px-3 py-2 font-mono text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 ${
           tab === "write" ? "block" : "hidden"
