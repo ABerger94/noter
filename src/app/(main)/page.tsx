@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getCourses, getNotes, getTags } from "@/lib/data";
+import { getCourses, getDocuments, getNotes, getTags } from "@/lib/data";
 import NotesList from "./notes-list";
 
 export default async function DashboardPage({
@@ -8,13 +8,15 @@ export default async function DashboardPage({
   searchParams: Promise<{ q?: string; course?: string; tag?: string }>;
 }) {
   const { q, course, tag } = await searchParams;
-  const [notes, courses, tags] = await Promise.all([
+  const [notes, documents, courses, tags] = await Promise.all([
     getNotes({ q, courseId: course, tag }),
+    getDocuments({ q, courseId: course, tag }),
     getCourses(),
     getTags(),
   ]);
 
   const hasFilters = Boolean(q || course || tag);
+  const isEmpty = notes.length === 0 && documents.length === 0;
 
   return (
     <div className="space-y-6">
@@ -66,24 +68,32 @@ export default async function DashboardPage({
         )}
       </form>
 
-      {notes.length === 0 ? (
+      {isEmpty ? (
         <div className="rounded-xl border border-dashed border-slate-300 p-10 text-center dark:border-slate-700">
           <p className="text-slate-600 dark:text-slate-300">
             {hasFilters
-              ? "No notes match your filters."
-              : "No notes yet. Create your first note to get started."}
+              ? "Nothing matches your filters."
+              : "Nothing yet. Create a note or upload a document to get started."}
           </p>
           {!hasFilters && (
-            <Link
-              href="/notes/new"
-              className="mt-4 inline-block rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500"
-            >
-              + New note
-            </Link>
+            <div className="mt-4 flex justify-center gap-3">
+              <Link
+                href="/notes/new"
+                className="inline-block rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500"
+              >
+                + New note
+              </Link>
+              <Link
+                href="/documents/new"
+                className="inline-block rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+              >
+                + Upload document
+              </Link>
+            </div>
           )}
         </div>
       ) : (
-        <NotesList notes={notes} />
+        <NotesList notes={notes} documents={documents} />
       )}
     </div>
   );

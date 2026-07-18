@@ -53,6 +53,55 @@ export async function getNote(id: string) {
   });
 }
 
+export async function getDocuments({
+  q,
+  courseId,
+  tag,
+}: {
+  q?: string;
+  courseId?: string;
+  tag?: string;
+}) {
+  return prisma.document.findMany({
+    where: {
+      AND: [
+        q ? { title: { contains: q, mode: "insensitive" } } : {},
+        courseId ? { courseId } : {},
+        tag ? { tags: { some: { tag: { name: tag } } } } : {},
+      ],
+    },
+    select: {
+      id: true,
+      title: true,
+      filename: true,
+      mimeType: true,
+      size: true,
+      courseId: true,
+      createdAt: true,
+      course: true,
+      tags: { include: { tag: true } },
+    },
+    orderBy: { createdAt: "asc" },
+  });
+}
+
+export async function getDocument(id: string) {
+  return prisma.document.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      title: true,
+      filename: true,
+      mimeType: true,
+      size: true,
+      courseId: true,
+      createdAt: true,
+      course: true,
+      tags: { include: { tag: true } },
+    },
+  });
+}
+
 export async function getRelatedNotes(noteId: string, limit = 5) {
   const notes = await prisma.note.findMany({
     select: {
