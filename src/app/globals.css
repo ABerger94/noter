@@ -25,3 +25,15 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Typography's default table style only draws header/row divider lines;
+   add full cell borders for a clearer grid. Uses the same th/td border
+   color variables the plugin already themes for prose-invert, so this
+   still looks right on the dark slideshow cards. */
+.prose th,
+.prose td {
+  border: 1px solid var(--tw-prose-td-borders);
+}
+.prose thead th {
+  border-color: var(--tw-prose-th-borders);
+}

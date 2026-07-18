@@ -21,6 +21,30 @@ function wrapSelection(
   return { value: newValue, selection: { start, end: start + selected.length } };
 }
 
+const TABLE_TEMPLATE = `| Header 1 | Header 2 |\n| --- | --- |\n| Cell 1 | Cell 2 |`;
+
+function insertTable(
+  value: string,
+  selectionStart: number,
+  selectionEnd: number
+): { value: string; selection: Selection } {
+  const before = value.slice(0, selectionStart);
+  const after = value.slice(selectionEnd);
+
+  // Tables need a blank line on either side to parse as their own block
+  // rather than merging into surrounding text.
+  const leadingBreak = before === "" || before.endsWith("\n\n") ? "" : before.endsWith("\n") ? "\n" : "\n\n";
+  const trailingBreak = after === "" ? "\n" : after.startsWith("\n\n") ? "" : after.startsWith("\n") ? "\n" : "\n\n";
+
+  const insertion = leadingBreak + TABLE_TEMPLATE + trailingBreak;
+  const newValue = before + insertion + after;
+
+  const highlightStart = before.length + leadingBreak.length + TABLE_TEMPLATE.indexOf("Header 1");
+  const highlightEnd = highlightStart + "Header 1".length;
+
+  return { value: newValue, selection: { start: highlightStart, end: highlightEnd } };
+}
+
 function prefixLines(
   value: string,
   selectionStart: number,
@@ -96,6 +120,11 @@ const TOOLBAR_BUTTONS: {
       const urlStart = s + selected.length + 3;
       return { value: newValue, selection: { start: urlStart, end: urlStart + 8 } };
     },
+  },
+  {
+    label: "Table",
+    title: "Table",
+    apply: (v, s, e) => insertTable(v, s, e),
   },
 ];
 
