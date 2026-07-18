@@ -24,6 +24,12 @@ export default function MainLayout({
               Notes
             </Link>
             <Link
+              href="/documents"
+              className="text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-400"
+            >
+              Documents
+            </Link>
+            <Link
               href="/courses"
               className="text-slate-600 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-400"
             >

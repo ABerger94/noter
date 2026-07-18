@@ -8,20 +8,22 @@ datasource db {
 }
 
 model Course {
-  id        String   @id @default(cuid())
+  id        String     @id @default(cuid())
   name      String
-  color     String   @default("#6366f1")
-  sortOrder Int      @default(0)
-  createdAt DateTime @default(now())
+  color     String     @default("#6366f1")
+  sortOrder Int        @default(0)
+  createdAt DateTime   @default(now())
   notes     Note[]
+  documents Document[]
 
   @@unique([name])
 }
 
 model Tag {
-  id    String     @id @default(cuid())
-  name  String     @unique
-  notes NoteTag[]
+  id        String        @id @default(cuid())
+  name      String        @unique
+  notes     NoteTag[]
+  documents DocumentTag[]
 }
 
 model Note {
@@ -58,4 +60,28 @@ model Attachment {
   createdAt DateTime @default(now())
 
   @@index([noteId])
+}
+
+model Document {
+  id        String        @id @default(cuid())
+  title     String
+  filename  String
+  mimeType  String
+  data      Bytes
+  size      Int
+  courseId  String?
+  course    Course?       @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  tags      DocumentTag[]
+  createdAt DateTime      @default(now())
+
+  @@index([courseId])
+}
+
+model DocumentTag {
+  documentId String
+  tagId      String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([documentId, tagId])
 }
