@@ -8,7 +8,10 @@ export default function MainLayout({
 }) {
   return (
     <div className="flex min-h-screen flex-col bg-slate-200 dark:bg-slate-950">
-      <header className="sticky top-0 z-10 border-b border-slate-300 bg-white/80 backdrop-blur dark:border-slate-700 dark:bg-slate-800/80">
+      <header
+        className="sticky z-10 border-b border-slate-300 bg-white/80 backdrop-blur dark:border-slate-700 dark:bg-slate-800/80"
+        style={{ top: "env(safe-area-inset-top)" }}
+      >
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3">
           <Link
             href="/"
