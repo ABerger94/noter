@@ -25,7 +25,7 @@ export default async function DashboardPage({
           type="text"
           name="q"
           defaultValue={q ?? ""}
-          placeholder="Search notes by title or content..."
+          placeholder="Search notes and documents..."
           className="w-full flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
         />
         <select

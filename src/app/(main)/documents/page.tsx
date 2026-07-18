@@ -3,6 +3,11 @@ import { getCourses, getDocuments, getTags } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
 
+function excerptText(content: string, length = 160) {
+  const plain = content.replace(/\s+/g, " ").trim();
+  return plain.length > length ? `${plain.slice(0, length)}...` : plain;
+}
+
 export default async function DocumentsPage({
   searchParams,
 }: {
@@ -36,7 +41,7 @@ export default async function DocumentsPage({
           type="text"
           name="q"
           defaultValue={q ?? ""}
-          placeholder="Search documents by title..."
+          placeholder="Search documents by title or text..."
           className="w-full flex-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
         />
         <select
@@ -111,6 +116,11 @@ export default async function DocumentsPage({
                     {document.title}
                   </h2>
                 </div>
+                {document.content && (
+                  <p className="mt-1 line-clamp-3 text-sm text-slate-500 dark:text-slate-400">
+                    {excerptText(document.content)}
+                  </p>
+                )}
                 <div className="mt-3 flex flex-wrap items-center gap-2">
                   {document.course && (
                     <span

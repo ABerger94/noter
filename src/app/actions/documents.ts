@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
+import { extractPdfText } from "@/lib/pdf-text";
 
 // Vercel's serverless functions hard-cap request bodies at ~4.5MB; leave
 // headroom under that for form fields and multipart overhead (mirrors the
@@ -54,6 +55,7 @@ export async function createDocument(formData: FormData) {
 
   const tagIds = await connectTags(tagNames);
   const buffer = Buffer.from(await file.arrayBuffer());
+  const content = await extractPdfText(new Uint8Array(buffer));
 
   const document = await prisma.document.create({
     data: {
@@ -63,6 +65,7 @@ export async function createDocument(formData: FormData) {
       mimeType: file.type,
       data: buffer,
       size: buffer.byteLength,
+      content,
       tags: { create: tagIds.map((tagId) => ({ tagId })) },
     },
   });

@@ -69,6 +69,7 @@ model Document {
   mimeType  String
   data      Bytes
   size      Int
+  content   String        @default("")
   courseId  String?
   course    Course?       @relation(fields: [courseId], references: [id], onDelete: SetNull)
   tags      DocumentTag[]
