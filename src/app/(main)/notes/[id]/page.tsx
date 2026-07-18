@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { deleteNote } from "@/app/actions/notes";
-import { getNote, getRelatedNotes } from "@/lib/data";
+import { getNote, getRelatedItems } from "@/lib/data";
 import DeleteNoteButton from "../delete-note-button";
 import MarkdownContent from "../markdown-content";
 
@@ -11,7 +11,7 @@ export default async function NoteViewPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [note, relatedNotes] = await Promise.all([getNote(id), getRelatedNotes(id)]);
+  const [note, relatedItems] = await Promise.all([getNote(id), getRelatedItems(id)]);
 
   if (!note) notFound();
 
@@ -110,14 +110,14 @@ export default async function NoteViewPage({
           }`}
         >
           <p className="mb-2 text-sm font-medium text-slate-700">
-            Related notes
+            Related
           </p>
-          {relatedNotes.length > 0 ? (
+          {relatedItems.length > 0 ? (
             <div className="flex flex-wrap gap-2">
-              {relatedNotes.map((related) => (
+              {relatedItems.map((related) => (
                 <Link
-                  key={related.id}
-                  href={`/notes/${related.id}`}
+                  key={`${related.kind}-${related.id}`}
+                  href={related.kind === "note" ? `/notes/${related.id}` : `/documents/${related.id}`}
                   className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 px-3 py-1 text-sm text-slate-700 hover:border-indigo-300 hover:text-indigo-600"
                 >
                   {related.course && (
@@ -126,15 +126,20 @@ export default async function NoteViewPage({
                       style={{ backgroundColor: related.course.color }}
                     />
                   )}
+                  {related.kind === "document" && (
+                    <span className="rounded bg-red-50 px-1 text-[10px] font-semibold uppercase tracking-wide text-red-600">
+                      PDF
+                    </span>
+                  )}
                   {related.title}
                 </Link>
               ))}
             </div>
           ) : (
             <p className="text-sm text-slate-400">
-              No related notes found yet. This fills in automatically based on
-              shared tags and similar wording, once other notes overlap with
-              this one.
+              Nothing related found yet. This fills in automatically based on
+              shared tags and similar wording, once other notes or documents
+              overlap with this one.
             </p>
           )}
         </div>

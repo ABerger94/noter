@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import { computeRelatedNotes } from "@/lib/related";
+import { computeRelatedItems } from "@/lib/related";
 
 export async function getCourses() {
   return prisma.course.findMany({ orderBy: [{ sortOrder: "asc" }, { name: "asc" }] });
@@ -65,7 +65,14 @@ export async function getDocuments({
   return prisma.document.findMany({
     where: {
       AND: [
-        q ? { title: { contains: q, mode: "insensitive" } } : {},
+        q
+          ? {
+              OR: [
+                { title: { contains: q, mode: "insensitive" } },
+                { content: { contains: q, mode: "insensitive" } },
+              ],
+            }
+          : {},
         courseId ? { courseId } : {},
         tag ? { tags: { some: { tag: { name: tag } } } } : {},
       ],
@@ -76,6 +83,7 @@ export async function getDocuments({
       filename: true,
       mimeType: true,
       size: true,
+      content: true,
       courseId: true,
       createdAt: true,
       course: true,
@@ -102,16 +110,32 @@ export async function getDocument(id: string) {
   });
 }
 
-export async function getRelatedNotes(noteId: string, limit = 5) {
-  const notes = await prisma.note.findMany({
-    select: {
-      id: true,
-      title: true,
-      content: true,
-      course: { select: { id: true, name: true, color: true } },
-      tags: { select: { tag: { select: { id: true, name: true } } } },
-    },
-  });
+export async function getRelatedItems(itemId: string, limit = 5) {
+  const [notes, documents] = await Promise.all([
+    prisma.note.findMany({
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        course: { select: { id: true, name: true, color: true } },
+        tags: { select: { tag: { select: { id: true, name: true } } } },
+      },
+    }),
+    prisma.document.findMany({
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        course: { select: { id: true, name: true, color: true } },
+        tags: { select: { tag: { select: { id: true, name: true } } } },
+      },
+    }),
+  ]);
 
-  return computeRelatedNotes(noteId, notes, limit);
+  const items = [
+    ...notes.map((note) => ({ ...note, kind: "note" as const })),
+    ...documents.map((document) => ({ ...document, kind: "document" as const })),
+  ];
+
+  return computeRelatedItems(itemId, items, limit);
 }

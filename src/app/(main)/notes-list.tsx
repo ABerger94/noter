@@ -20,6 +20,11 @@ function excerpt(content: string, length = 160) {
   return plain.length > length ? `${plain.slice(0, length)}...` : plain;
 }
 
+function excerptText(content: string, length = 160) {
+  const plain = content.replace(/\s+/g, " ").trim();
+  return plain.length > length ? `${plain.slice(0, length)}...` : plain;
+}
+
 export default function NotesList({
   notes,
   documents,
@@ -184,6 +189,11 @@ export default function NotesList({
                     {item.document.title}
                   </h2>
                 </div>
+                {item.document.content && (
+                  <p className="mt-1 line-clamp-3 text-sm text-slate-500 dark:text-slate-400">
+                    {excerptText(item.document.content)}
+                  </p>
+                )}
                 <div className="mt-3 flex flex-wrap items-center gap-2">
                   {item.document.course && (
                     <span

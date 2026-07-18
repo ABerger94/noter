@@ -1,14 +1,18 @@
-export type RelatedNoteInput = {
+export type RelatedItemKind = "note" | "document";
+
+export type RelatedItemInput = {
   id: string;
   title: string;
   content: string;
+  kind: RelatedItemKind;
   course: { id: string; name: string; color: string } | null;
   tags: { tag: { id: string; name: string } }[];
 };
 
-export type RelatedNoteResult = {
+export type RelatedItemResult = {
   id: string;
   title: string;
+  kind: RelatedItemKind;
   course: { name: string; color: string } | null;
   score: number;
 };
@@ -40,29 +44,29 @@ function tokenize(text: string): string[] {
   return words.filter((w) => !STOPWORDS.has(w));
 }
 
-function keywordCounts(note: RelatedNoteInput): Map<string, number> {
+function keywordCounts(item: RelatedItemInput): Map<string, number> {
   const counts = new Map<string, number>();
   const add = (word: string, weight: number) =>
     counts.set(word, (counts.get(word) ?? 0) + weight);
-  for (const w of tokenize(note.title)) add(w, 3);
-  for (const w of tokenize(note.content)) add(w, 1);
+  for (const w of tokenize(item.title)) add(w, 3);
+  for (const w of tokenize(item.content)) add(w, 1);
   return counts;
 }
 
-export function computeRelatedNotes(
+export function computeRelatedItems(
   targetId: string,
-  notes: RelatedNoteInput[],
+  items: RelatedItemInput[],
   limit = 5
-): RelatedNoteResult[] {
-  const target = notes.find((n) => n.id === targetId);
+): RelatedItemResult[] {
+  const target = items.find((n) => n.id === targetId);
   if (!target) return [];
 
   const keywordMaps = new Map<string, Map<string, number>>();
   const docFreq = new Map<string, number>();
 
-  for (const note of notes) {
-    const counts = keywordCounts(note);
-    keywordMaps.set(note.id, counts);
+  for (const item of items) {
+    const counts = keywordCounts(item);
+    keywordMaps.set(item.id, counts);
     for (const word of counts.keys()) {
       docFreq.set(word, (docFreq.get(word) ?? 0) + 1);
     }
@@ -71,28 +75,28 @@ export function computeRelatedNotes(
   const targetCounts = keywordMaps.get(targetId)!;
   const targetTagIds = new Set(target.tags.map(({ tag }) => tag.id));
 
-  return notes
-    .filter((note) => note.id !== targetId)
-    .map((note) => {
-      const counts = keywordMaps.get(note.id)!;
+  return items
+    .filter((item) => item.id !== targetId)
+    .map((item) => {
+      const counts = keywordMaps.get(item.id)!;
       let score = 0;
 
       for (const [word, weight] of targetCounts) {
         const otherWeight = counts.get(word);
         if (!otherWeight) continue;
         const df = docFreq.get(word) ?? 1;
-        const idf = Math.log((notes.length + 1) / df) + 1;
+        const idf = Math.log((items.length + 1) / df) + 1;
         score += weight * otherWeight * idf;
       }
 
-      const sharedTags = note.tags.filter(({ tag }) => targetTagIds.has(tag.id)).length;
+      const sharedTags = item.tags.filter(({ tag }) => targetTagIds.has(tag.id)).length;
       score += sharedTags * 25;
 
-      if (target.course && note.course && target.course.id === note.course.id) {
+      if (target.course && item.course && target.course.id === item.course.id) {
         score += 3;
       }
 
-      return { id: note.id, title: note.title, course: note.course, score };
+      return { id: item.id, title: item.title, kind: item.kind, course: item.course, score };
     })
     .filter((result) => result.score > 0)
     .sort((a, b) => b.score - a.score)
